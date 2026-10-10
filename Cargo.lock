@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "intragen"
+name = "intra-codegen"
 version = "0.1.0"
 dependencies = [
  "staticly",
@@ -11,9 +11,9 @@ dependencies = [
 
 [[package]]
 name = "staticly"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "67565e9d3105655d0e6b89eb545951df47716d9fa21a251ff65c88090e0dac24"
+checksum = "225bb811f1885c16ae63e6bc8193a4ad47563f1b0149493afdb56fdeeeeec7f0"
 dependencies = [
  "staticly-hash",
  "staticly-macros",

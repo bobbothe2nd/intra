@@ -1,5 +1,5 @@
 [package]
-name = "intragen"
+name = "intra-codegen"
 version = "0.1.0"
 edition = "2024"
 categories = ["compilers", "data-structures", "hardware-support"]
