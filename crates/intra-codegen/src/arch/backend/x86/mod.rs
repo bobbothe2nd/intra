@@ -1,17 +1,22 @@
-use crate::{arch::backend::{LowerError, x86::{instr::X86Instr, reg::X86VReg}}, ir::{Block, Function, Symbol, data::Terminator}};
+use crate::{arch::backend::{LowerError, x86::{instr::X86Instr, reg::X86Reg}}, ir::{Block, Function, Module, StaticData, Symbol, data::Terminator}};
 
 pub mod instr;
 
-mod reg;
+pub mod reg;
+
+pub fn lower_ir_x86(module: &Module) -> Result<X86Module, LowerError> {
+    X86Lowerer::new(module).lower()
+}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum X86Operand {
-    VReg(X86VReg),
+    Reg(X86Reg),
     Imm(i64),
 }
 
 pub struct X86Module {
     pub funcs: Box<[X86Function]>,
+    pub data: Box<[StaticData]>,
 }
 
 pub struct X86Function {
@@ -27,15 +32,41 @@ pub struct X86Block {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct X86Label(pub u32);
 
-pub struct X86Lowerer {
-    next_vreg: u32,
+pub struct X86Lowerer<'a> {
+    module: &'a Module,
+    allocs: Vec<Option<X86Reg>>,
 }
 
-impl X86Lowerer {
-    pub fn lower_function(
+impl<'a> X86Lowerer<'a> {
+    pub fn new(module: &'a Module) -> Self {
+        Self {
+            module,
+            allocs: Vec::new(),
+        }
+    }
+
+    pub fn lower(
+        &mut self,
+    ) -> Result<X86Module, LowerError> {
+        let mut funcs = Vec::with_capacity(self.module.funcs.len());
+
+        for func in &self.module.funcs {
+            funcs.push(self.lower_function(func)?);
+        }
+
+        Ok(X86Module {
+            funcs: funcs.into_boxed_slice(),
+            data: self.module.data.clone(),
+        })
+    }
+
+    fn lower_function(
         &mut self,
         func: &Function,
     ) -> Result<X86Function, LowerError> {
+        self.allocs.clear();
+        self.allocs.resize(self.module.regs.len(), None);
+
         let labels: Box<[X86Label]> = func
             .blocks
             .iter()

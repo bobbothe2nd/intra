@@ -49,10 +49,8 @@ pub enum Constant {
     },
 }
 
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub struct VReg {
-    pub class: RegisterClass,
-}
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct VReg(pub usize);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Effects {
@@ -88,7 +86,7 @@ pub enum RegisterClass {
     },
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum OperandClass {
     Symbol,
 

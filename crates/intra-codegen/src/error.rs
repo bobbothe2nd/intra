@@ -1,6 +1,6 @@
 use core::fmt::{self, Debug, Display, Formatter, Write};
 
-use crate::ir::{Symbol, data::{Constant, Instruction, Operand, RegisterClass, ScalarType, VReg}};
+use crate::ir::{Symbol, data::{Constant, Instruction, Operand, RegisterClass, ScalarType}};
 
 #[derive(Debug, Clone)]
 pub struct Error {
@@ -95,12 +95,6 @@ impl Debug for ScalarType {
             Self::I32 => "i32",
             Self::I64 => "i64",
         })
-    }
-}
-
-impl Debug for VReg {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        Debug::fmt(&self.class, f)
     }
 }
 

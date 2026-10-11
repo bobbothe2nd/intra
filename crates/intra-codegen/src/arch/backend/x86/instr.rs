@@ -1,19 +1,19 @@
-use crate::{arch::backend::{LowerError, x86::{X86Label, X86Lowerer, X86Operand, reg::X86VReg}}, ir::{data::Instruction, opcodes::Opcode}};
+use crate::{arch::backend::{LowerError, x86::{X86Label, X86Lowerer, X86Operand, reg::X86Reg}}, ir::{data::Instruction, opcodes::Opcode}};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum X86Instr {
     Mov {
-        dst: X86VReg,
+        dst: X86Reg,
         src: X86Operand,
     },
 
     Add {
-        dst: X86VReg,
+        dst: X86Reg,
         src: X86Operand,
     },
 
     Test {
-        reg: X86VReg,
+        reg: X86Reg,
     },
 
     Jmp {
@@ -25,11 +25,11 @@ pub enum X86Instr {
     },
 
     Ret {
-        value: Option<X86VReg>,
+        value: Option<X86Reg>,
     },
 }
 
-impl X86Lowerer {
+impl X86Lowerer<'_> {
     pub fn lower_instr(&mut self, instr: &Instruction, collect: &mut Vec<X86Instr>) -> Result<(), LowerError> {
         match instr.opcode {
             Opcode::BuiltinMove => {
@@ -53,14 +53,14 @@ impl X86Lowerer {
                 let lhs = self.alloc_operand(lhs)?;
                 let rhs = self.alloc_operand(rhs)?;
 
-                let X86Operand::VReg(lhs) = lhs else {
+                let X86Operand::Reg(lhs) = lhs else {
                     return Err(LowerError::InvalidOperands);
                 };
 
                 collect.extend([
                     X86Instr::Mov {
                         dst,
-                        src: X86Operand::VReg(lhs),
+                        src: X86Operand::Reg(lhs),
                     },
                     X86Instr::Add {
                         dst,

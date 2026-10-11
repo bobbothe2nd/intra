@@ -7,6 +7,7 @@ pub enum LowerError {
     Unreachable,
     UnsupportedOpcode(Opcode),
     UnsupportedRegister,
+    RegisterExhaustion,
     InvalidOperands,
     MissingOutput,
 }
