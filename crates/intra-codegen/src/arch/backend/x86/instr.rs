@@ -1,4 +1,4 @@
-use crate::{arch::backend::{LowerError, x86::{X86Label, X86Lowerer, X86Operand, reg::X86Reg}}, ir::{data::Instruction, opcodes::Opcode}};
+use crate::{arch::backend::x86::{X86Label, X86Lowerer, X86Operand, reg::X86Reg}, error::Error, ir::{data::Instruction, opcodes::Opcode}};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum X86Instr {
@@ -30,11 +30,11 @@ pub enum X86Instr {
 }
 
 impl X86Lowerer<'_> {
-    pub fn lower_instr(&mut self, instr: &Instruction, collect: &mut Vec<X86Instr>) -> Result<(), LowerError> {
+    pub fn lower_instr(&mut self, instr: &Instruction, collect: &mut Vec<X86Instr>) -> Result<(), Error> {
         match instr.opcode {
             Opcode::BuiltinMove => {
                 let [src] = instr.inputs.as_ref() else {
-                    return Err(LowerError::InvalidOperands);
+                    return Err(lower_error!(@InvalidOperands));
                 };
 
                 let dst = self.alloc_out(instr)?;
@@ -45,7 +45,7 @@ impl X86Lowerer<'_> {
 
             Opcode::CoreAddI => {
                 let [lhs, rhs] = instr.inputs.as_ref() else {
-                    return Err(LowerError::InvalidOperands);
+                    return Err(lower_error!(@InvalidOperands));
                 };
 
                 let dst = self.alloc_out(instr)?;
@@ -54,7 +54,7 @@ impl X86Lowerer<'_> {
                 let rhs = self.alloc_operand(rhs)?;
 
                 let X86Operand::Reg(lhs) = lhs else {
-                    return Err(LowerError::InvalidOperands);
+                    return Err(lower_error!(@InvalidOperands));
                 };
 
                 collect.extend([
@@ -69,8 +69,8 @@ impl X86Lowerer<'_> {
                 ]);
             }
 
-            opcode => {
-                return Err(LowerError::UnsupportedOpcode(opcode));
+            _ => {
+                return Err(lower_error!(@InvalidOpcode));
             }
         }
 

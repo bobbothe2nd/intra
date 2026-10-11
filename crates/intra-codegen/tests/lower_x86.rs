@@ -1,4 +1,4 @@
-use intra_codegen::{arch::backend::x86::{X86Label, X86Operand, instr::X86Instr, lower_ir_x86, reg::{X86RegClass, X86Reg}}, ir::{Block, CallingConv, Function, Module, Symbol, data::{Instruction, Operand, RegisterClass, ScalarType, Terminator, VReg}, opcodes::Opcode}};
+use intra_codegen::{arch::{backend::x86::{X86Label, X86Operand, instr::X86Instr, reg::{X86Reg, X86RegClass}}, lower_ir_x86}, ir::{Block, CallingConv, Function, Module, Symbol, data::{Instruction, Operand, RegisterClass, ScalarType, Terminator, VReg}, opcodes::Opcode}};
 
 #[test]
 fn lowers_single_add_function() {
@@ -16,7 +16,7 @@ fn lowers_single_add_function() {
 
         blocks: Box::new([
             Block {
-                ops: Box::new([
+                instrs: Box::new([
                     Instruction {
                         opcode: Opcode::CoreAddI,
                         inputs: Box::new([
