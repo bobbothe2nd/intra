@@ -24,14 +24,15 @@ impl Display for Error {
 
 impl core::error::Error for Error {}
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct Location {
+    module: Box<str>,
     id: usize,
 }
 
 impl Display for Location {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "instr{}", self.id)
+        write!(f, "{}/instr{}", self.module, self.id)
     }
 }
 

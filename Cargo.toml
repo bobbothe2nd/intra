@@ -1,8 +1,5 @@
-[package]
-name = "intra-codegen"
-version = "0.1.0"
-edition = "2024"
-categories = ["compilers", "data-structures", "hardware-support"]
-
-[dependencies]
-staticly = "0.1.0"
+[workspace]
+members = [
+    "crates/intra-codegen",
+]
+resolver = "3"

@@ -21,6 +21,7 @@ pub struct OpDescriptor {
     pub properties: Properties,
 }
 
+/// Instruction with both inputs and optional output.
 #[derive(Clone, PartialEq)]
 pub struct Instruction {
     pub opcode: Opcode,
@@ -48,7 +49,7 @@ pub enum Constant {
     },
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct VReg {
     pub class: RegisterClass,
 }
@@ -66,7 +67,7 @@ pub struct Properties {
     pub scope: ExecutionScope,
 }
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum RegisterClass {
     Scalar(ScalarType),
 
